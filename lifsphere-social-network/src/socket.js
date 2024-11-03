@@ -12,6 +12,19 @@ const configureSocket = (server) => {
             // Store user data or handle user session here
         });
 
+        // WebRTC Signaling
+        socket.on('offer', (data) => {
+            socket.broadcast.emit('offer', data); // Send offer to other peer
+        });
+
+        socket.on('answer', (data) => {
+            socket.broadcast.emit('answer', data); // Send answer to other peer
+        });
+
+        socket.on('ice-candidate', (data) => {
+            socket.broadcast.emit('ice-candidate', data); // Send ICE candidates to other peer
+        });
+
         // Example of handling a custom event
         socket.on('sendMessage', (message) => {
             console.log('Message received:', message);
