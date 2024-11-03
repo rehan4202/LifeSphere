@@ -4,6 +4,8 @@ const cors = require('cors');
 const http = require('http');
 const configureSocket = require('./socket'); // Import the socket configuration
 const userRoutes = require('./routes/userRoutes'); // Import user routes
+const imageProcessingRoutes = require('./routes/imageProcessing'); // Import image processing routes
+const redis = require('redis'); // Import Redis
 
 require('dotenv').config();
 
@@ -20,8 +22,23 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
+// Redis Setup
+const redisClient = redis.createClient(); // Create a Redis client
+
+redisClient.on('error', (err) => {
+    console.error('Redis connection error:', err);
+});
+
+// Connect to Redis
+redisClient.connect()
+    .then(() => console.log('Connected to Redis'))
+    .catch(err => console.error('Redis connection failed:', err));
+
 // Use User Routes
 app.use('/api/users', userRoutes); // Prefix the user routes
+
+// Use Image Processing Routes
+app.use('/api/images', imageProcessingRoutes); // Prefix the image processing routes
 
 // Optional: Health check route
 app.get('/health', (req, res) => {
@@ -42,3 +59,5 @@ server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 io.on('error', (err) => {
     console.error('Socket.IO error:', err);
 });
+
+module.exports = { redisClient }; // Export Redis client if needed for other files
