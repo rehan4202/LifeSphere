@@ -6,6 +6,7 @@ const configureSocket = require('./socket'); // Import the socket configuration
 const userRoutes = require('./routes/userRoutes'); // Import user routes
 const imageProcessingRoutes = require('./routes/imageProcessing'); // Import image processing routes
 const redis = require('redis'); // Import Redis
+const sharpImageProcessingRoutes = require('./routes/sharpImageProcessing'); // Import Sharp image processing routes
 
 require('dotenv').config();
 
@@ -39,6 +40,9 @@ app.use('/api/users', userRoutes); // Prefix the user routes
 
 // Use Image Processing Routes
 app.use('/api/images', imageProcessingRoutes); // Prefix the image processing routes
+
+// Use Sharp Image Processing Routes
+app.use('/api/images/sharp', sharpImageProcessingRoutes); // Prefix the Sharp image processing routes
 
 // Optional: Health check route
 app.get('/health', (req, res) => {
